@@ -9,7 +9,7 @@ import ShopPage from  './pages/shop/shop.component';
 import SigInAndSignUp from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
 import Contact from './pages/contact/contact.component';
 
-import { auth } from './firebase/firebase.utils';
+import { auth, createUserProfileDocument } from './firebase/firebase.utils';
 
 class App extends Component {
   constructor(props){
@@ -22,10 +22,21 @@ class App extends Component {
   unsubcribeFromAuth = null;
   
   componentDidMount() {
-    this.unsubcribeFromAuth = auth.onAuthStateChanged(user => {
-      this.setState({currentUser:user});
-
-      console.log(user);
+    this.unsubcribeFromAuth = auth.onAuthStateChanged(async userAuth => {
+      if(userAuth) {
+        const userRef = await createUserProfileDocument(userAuth);
+        
+        userRef.onSnapshot(snapshot => {
+          this.setState({
+            currentUser:{
+              id: snapshot.id,
+              ...snapshot.data()
+            }
+          }, () => console.log(this.state))
+        })
+      } else {
+        this.setState({currentUser: userAuth})
+      }
     })
   }
 

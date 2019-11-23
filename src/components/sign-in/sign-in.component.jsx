@@ -31,7 +31,7 @@ class SignIn extends Component {
     render() {
         return (
             <div className="sign-in" >
-                <h2 className='title'>Sing in</h2>
+                <h2 className='title'>Sign in</h2>
                 <span>I already have an account</span>
                 <form onSubmit={this.handleSubmit}>
                     <FormInput 
