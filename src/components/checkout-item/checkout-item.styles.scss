@@ -20,13 +20,20 @@
     .name,
     .quantity,
     .price {
+      display: flex;
+      justify-content: center;
       width: 23%;
+      text-align: center;
     }
-  
-    .quantity {
-      padding-left: 20px;
+    
+    .arrow {
+      cursor: pointer;
     }
-  
+
+    .value {
+      margin: 0 10px;
+    }
+      
     .remove-button {
       padding-left: 12px;
       cursor: pointer;
