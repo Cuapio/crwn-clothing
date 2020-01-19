@@ -43,7 +43,7 @@ class App extends Component {
       } else {
         setCurrentUser(userAuth);
       }
-    })
+    });
   }
 
   componentWillUnmount() {
