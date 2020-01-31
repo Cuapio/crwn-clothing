@@ -16,7 +16,7 @@ const firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 
-export const createUserProfileDocument = async (userAuth, extraData) => {
+export const createUserProfileDocument = async (userAuth, additionalData) => {
     if(!userAuth) return;
 
     const userRef = firestore.doc(`users/${userAuth.uid}`);
@@ -32,10 +32,10 @@ export const createUserProfileDocument = async (userAuth, extraData) => {
                 displayName,
                 email,
                 createdAt,
-                ...extraData 
+                ...additionalData 
             })
         } catch(error) {
-            console.log('error creating user', error.massage)
+            console.log('error creating user: ', error.massage)
         }
     }
 
@@ -65,7 +65,6 @@ export const convertCollectionSnapshotToMap = (collection) => {
             items
         };
     });
-    console.log(transformedCollectionDocs);
 
     return transformedCollectionDocs.reduce((accumulator, doc) => {
         accumulator[doc.title.toLowerCase()] = doc;
@@ -73,11 +72,19 @@ export const convertCollectionSnapshotToMap = (collection) => {
     }, {})
 };
 
+export const getCurrentUser = () => {
+    return new Promise((resolve, reject) => {
+        const unsubcribe = auth.onAuthStateChanged(userAuth => {
+            unsubcribe();
+            resolve(userAuth)
+        }, reject)
+    })
+}
+
 export const auth = firebase.auth();
 export const firestore = firebase.firestore();
 
-const provider = new firebase.auth.GoogleAuthProvider();
-provider.setCustomParameters({ prompt: 'select_account'});
-export const signInWithGoogle = () => auth.signInWithPopup(provider);
+export const googleProvider = new firebase.auth.GoogleAuthProvider();
+googleProvider.setCustomParameters({ prompt: 'select_account'});
 
 export default firebase;
